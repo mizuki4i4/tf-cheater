@@ -5,8 +5,8 @@ const vscode = require("vscode");
 const MarkdownIt = require("markdown-it");
 const axios_1 = require("axios");
 const md = new MarkdownIt();
-const cats = {
-    'Coding Cat': 'https://www.w3schools.com/tags/tag_iframe.ASP',
+const resources_url = {
+    'Coding Cat': 'https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown',
 };
 function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('catCoding.start', () => {
@@ -115,6 +115,7 @@ class CatCodingPanel {
         const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
         // fix: md
         const url = "https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown";
+        const token = "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"; // あなたのGitHubトークン
         async function fetchAndRender() {
             try {
                 const response = await axios_1.default.get(url, {
