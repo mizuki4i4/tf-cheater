@@ -6,7 +6,7 @@ const MarkdownIt = require("markdown-it");
 const axios_1 = require("axios");
 const md = new MarkdownIt();
 const resources_url = {
-    'Coding Cat': 'https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown',
+    'container_app_environment': 'https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown',
 };
 function activate(context) {
     context.subscriptions.push(vscode.commands.registerCommand('catCoding.start', () => {
@@ -94,13 +94,13 @@ class CatCodingPanel {
         switch (this._panel.viewColumn) {
             case vscode.ViewColumn.One:
             default:
-                this._updateForCat(webview, 'Coding Cat');
+                this._updateForCat(webview, 'container_app_environment');
                 return;
         }
     }
     async _updateForCat(webview, catName) {
         this._panel.title = catName;
-        this._panel.webview.html = await this._getHtmlForWebview(webview, cats[catName]);
+        this._panel.webview.html = await this._getHtmlForWebview(webview, resources_url[catName]);
     }
     async _getHtmlForWebview(webview, catGifPath) {
         // Local path to main script run in the webview
@@ -115,7 +115,6 @@ class CatCodingPanel {
         const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
         // fix: md
         const url = "https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown";
-        const token = "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"; // あなたのGitHubトークン
         async function fetchAndRender() {
             try {
                 const response = await axios_1.default.get(url, {
@@ -125,6 +124,7 @@ class CatCodingPanel {
                     }
                 });
                 const markdownHtml = md.render(response.data);
+                console.log(markdownHtml);
                 return `
 			<!DOCTYPE html>
 			<html lang="en">

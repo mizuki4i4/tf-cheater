@@ -5,7 +5,7 @@ import axios from 'axios';
 const md = new MarkdownIt();
 
 const resources_url = {
-	'Coding Cat': 'https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown',
+	'container_app_environment': 'https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown',
 };
 
 export function activate(context: vscode.ExtensionContext) {
@@ -136,14 +136,14 @@ class CatCodingPanel {
 		switch (this._panel.viewColumn) {
 			case vscode.ViewColumn.One:
 			default:
-				this._updateForCat(webview, 'Coding Cat');
+				this._updateForCat(webview, 'container_app_environment');
 				return;
 		}
 	}
 
-	private async _updateForCat(webview: vscode.Webview, catName: keyof typeof cats) {
+	private async _updateForCat(webview: vscode.Webview, catName: keyof typeof resources_url) {
 		this._panel.title = catName;
-		this._panel.webview.html = await this._getHtmlForWebview(webview, cats[catName]);
+		this._panel.webview.html = await this._getHtmlForWebview(webview, resources_url[catName]);
 	}
 
 	private async _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
@@ -163,7 +163,7 @@ class CatCodingPanel {
 		
 		// fix: md
 		const url = "https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown";
-		const token = "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"; // あなたのGitHubトークン
+
 
 		async function fetchAndRender(): Promise<string> {
 		try {
@@ -175,6 +175,7 @@ class CatCodingPanel {
 		});
 		
 		const markdownHtml = md.render(response.data);
+		console.log(markdownHtml);
 
 		return `
 			<!DOCTYPE html>
