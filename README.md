@@ -4,8 +4,6 @@ xxxxxxxxxx
 
 ## Demo
 
-![demo](demo.gif)
-
 ## VS Code API
 
 ### `vscode` module

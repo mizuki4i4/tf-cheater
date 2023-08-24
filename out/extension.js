@@ -2,9 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.activate = void 0;
 const vscode = require("vscode");
-const MarkdownIt = require("markdown-it");
 const axios_1 = require("axios");
-const md = new MarkdownIt();
+const dotenv = require("dotenv");
+const path = require("path");
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 const resources_url = {
     'container_app_environment': 'https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown',
 };
@@ -115,16 +116,19 @@ class CatCodingPanel {
         const stylesMainUri = webview.asWebviewUri(stylesPathMainPath);
         // fix: md
         const url = "https://api.github.com/repos/hashicorp/terraform-provider-azurerm/contents/website/docs/d/container_app_environment.html.markdown";
+        const token = process.env.GIT_TOKEN;
+        console.log("*****render-start******");
         async function fetchAndRender() {
             try {
                 const response = await axios_1.default.get(url, {
                     headers: {
-                        "Authorization": `token ${token}`,
-                        "Accept": "application/vnd.github.v3.raw"
+                        "Authorization": `Bearer ${token}`,
+                        "Accept": "application/vnd.github.html+json",
+                        "X-GitHub-Api-Version": "2022-11-28"
                     }
                 });
-                const markdownHtml = md.render(response.data);
-                console.log(markdownHtml);
+                console.log(response.data);
+                const html = response.data;
                 return `
 			<!DOCTYPE html>
 			<html lang="en">
@@ -137,12 +141,11 @@ class CatCodingPanel {
 			<title>Cat Coding</title>
 			</head>
 			<body>
-			${markdownHtml}
+				${html}
 			</body>
 			</html>`;
             }
             catch (error) {
-                console.error(error);
                 return "error"; // エラーハンドリングを適切に行うべきです
             }
         }
